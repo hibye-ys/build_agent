@@ -8,7 +8,7 @@ from typing import Dict, Any, List, Optional
 from pathlib import Path
 
 from langchain_core.tools import tool, Tool
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 
 class CalculatorInput(BaseModel):

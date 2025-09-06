@@ -7,7 +7,7 @@ from langchain_core.tools import BaseTool
 from langchain_core.messages import SystemMessage
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.graph.graph import CompiledStateGraph
+from langgraph.graph.state import CompiledStateGraph
 
 from ..models import ModelConfig, create_chat_model
 from ..tools import get_tools_by_names

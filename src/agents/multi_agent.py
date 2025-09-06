@@ -8,7 +8,7 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.tools import tool
 from langgraph.graph import StateGraph, END, START
 from langgraph.prebuilt import create_react_agent
-from langgraph.graph.graph import CompiledStateGraph
+from langgraph.graph.state import CompiledStateGraph
 
 from ..models import ModelConfig, create_chat_model
 from ..tools import get_tools_by_names

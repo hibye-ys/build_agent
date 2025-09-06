@@ -6,29 +6,25 @@ import json
 
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.checkpoint.sqlite import SqliteSaver
+# from langgraph.checkpoint.sqlite import SqliteSaver  # Not available in current version
 from langgraph.prebuilt import create_react_agent
-from langgraph.graph.graph import CompiledStateGraph
+from langgraph.graph.state import CompiledStateGraph
 
 from ..models import ModelConfig, create_chat_model
 from ..tools import get_tools_by_names
 
 
-class PersistentMemorySaver(SqliteSaver):
-    """Persistent memory saver using SQLite."""
+class PersistentMemorySaver(MemorySaver):
+    """Persistent-like memory saver using in-memory storage (fallback for SQLite)."""
     
     def __init__(self, db_path: str = "checkpoints.db"):
         """Initialize persistent memory saver.
         
         Args:
-            db_path: Path to SQLite database file
+            db_path: Path to SQLite database file (ignored in fallback mode)
         """
-        # Ensure parent directory exists
-        db_file = Path(db_path)
-        db_file.parent.mkdir(parents=True, exist_ok=True)
-        
-        # Initialize with connection string
-        super().__init__(conn_string=str(db_file))
+        # Initialize with basic MemorySaver (SQLite not available)
+        super().__init__()
 
 
 def create_memory_agent(

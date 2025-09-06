@@ -5,7 +5,7 @@ from typing_extensions import TypedDict, Annotated
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, ToolMessage
 from langchain_core.tools import BaseTool
 from langgraph.graph import StateGraph, END, START
-from langgraph.graph.graph import CompiledStateGraph
+from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, InjectedState
 from langgraph.checkpoint.memory import MemorySaver
 
