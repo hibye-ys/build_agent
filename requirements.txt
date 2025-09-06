@@ -15,6 +15,13 @@ pydantic>=2.0.0
 pyyaml>=6.0
 aiofiles>=24.0.0
 httpx>=0.27.0
+asyncio>=3.4.3
+
+# MCP Integration Dependencies
+# Note: MCP servers are typically installed separately via npm
+# Example: npm install -g @modelcontextprotocol/server-filesystem
+aiohttp>=3.9.0  # For HTTP/WebSocket MCP connections (future)
+jsonrpc>=1.13.0  # For JSON-RPC protocol support (optional)
 
 # Prompt Management
 jinja2>=3.1.0
