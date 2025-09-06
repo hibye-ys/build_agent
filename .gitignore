@@ -56,3 +56,5 @@ data/
 *.db
 *.sqlite3
 checkpoints/
+# Serena MCP project files
+.serena/
