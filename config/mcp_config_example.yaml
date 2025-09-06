@@ -1,0 +1,166 @@
+# MCP Configuration Example
+# This file demonstrates various MCP server configurations
+
+# Global settings for MCP integration
+settings:
+  connection_timeout: 30         # Timeout for server connections (seconds)
+  retry_attempts: 3              # Number of retry attempts for failed connections
+  retry_delay: 1.0              # Delay between retry attempts (seconds)
+  lazy_loading: true            # Use lazy loading for tools
+  cache_enabled: true           # Enable resource caching
+  cache_ttl: 3600              # Cache time-to-live (seconds)
+  max_connections: 10          # Maximum concurrent connections
+  health_check_interval: 60    # Health check interval (seconds)
+  log_level: INFO              # Logging level
+  tool_filtering:
+    disallowed:                # Tools to exclude globally
+      - dangerous_tool
+      - admin_tool
+
+# MCP Server Configurations
+servers:
+  # Filesystem MCP Server (stdio type)
+  filesystem_mcp:
+    type: stdio
+    command: npx
+    args:
+      - "@modelcontextprotocol/server-filesystem"
+      - "/Users/shared"         # Directory to expose
+    env:
+      NODE_ENV: production
+    timeout: 30
+    retry_attempts: 3
+    capabilities:
+      tools: true
+      resources: true
+    metadata:
+      description: "Filesystem access for shared directory"
+      tags: ["filesystem", "local"]
+
+  # Playwright Browser Automation (stdio type)
+  browser_mcp:
+    type: stdio
+    command: npx
+    args:
+      - "@modelcontextprotocol/server-playwright"
+    env:
+      BROWSER_TYPE: chromium    # or firefox, webkit
+      HEADLESS: "true"
+    timeout: 60                # Longer timeout for browser operations
+    retry_attempts: 2
+    metadata:
+      description: "Browser automation and web scraping"
+      tags: ["browser", "automation", "testing"]
+
+  # GitHub MCP Server (stdio type)
+  github_mcp:
+    type: stdio
+    command: npx
+    args:
+      - "@modelcontextprotocol/server-github"
+    env:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}  # Environment variable reference
+    timeout: 30
+    metadata:
+      description: "GitHub repository access"
+      tags: ["github", "vcs", "collaboration"]
+
+  # PostgreSQL MCP Server (stdio type)
+  postgres_mcp:
+    type: stdio
+    command: npx
+    args:
+      - "@modelcontextprotocol/server-postgres"
+    env:
+      DATABASE_URL: ${DATABASE_URL}  # PostgreSQL connection string
+    timeout: 30
+    retry_attempts: 5
+    metadata:
+      description: "PostgreSQL database access"
+      tags: ["database", "sql", "postgres"]
+
+  # Python Code Execution (stdio type)
+  python_mcp:
+    type: stdio
+    command: python
+    args:
+      - "-m"
+      - "mcp_python_server"
+      - "--safe-mode"           # Run in safe mode
+    env:
+      PYTHONPATH: "./libs"
+    timeout: 120               # Longer timeout for code execution
+    metadata:
+      description: "Python code execution environment"
+      tags: ["python", "code", "execution"]
+
+  # Custom HTTP MCP Server (http type)
+  custom_api_mcp:
+    type: http
+    url: http://localhost:8080/mcp
+    auth:
+      type: bearer
+      token: ${API_TOKEN}       # Bearer token from environment
+    timeout: 30
+    retry_attempts: 3
+    metadata:
+      description: "Custom API integration"
+      tags: ["api", "custom", "http"]
+
+  # WebSocket MCP Server (websocket type)
+  realtime_mcp:
+    type: websocket
+    url: ws://localhost:8081/mcp
+    auth:
+      type: api_key
+      api_key: ${REALTIME_API_KEY}
+    timeout: 30
+    metadata:
+      description: "Real-time data streaming"
+      tags: ["websocket", "realtime", "streaming"]
+
+  # Elasticsearch MCP Server (http type with custom auth)
+  elasticsearch_mcp:
+    type: http
+    url: https://elasticsearch.example.com:9200/mcp
+    auth:
+      type: custom
+      custom_config:
+        username: ${ES_USERNAME}
+        password: ${ES_PASSWORD}
+        verify_ssl: true
+    timeout: 45
+    metadata:
+      description: "Elasticsearch search and analytics"
+      tags: ["search", "elasticsearch", "analytics"]
+
+  # Docker MCP Server (stdio type)
+  docker_mcp:
+    type: stdio
+    command: docker
+    args:
+      - "run"
+      - "--rm"
+      - "-i"
+      - "mcp-server:latest"
+    env:
+      DOCKER_HOST: unix:///var/run/docker.sock
+    timeout: 60
+    metadata:
+      description: "Docker container management"
+      tags: ["docker", "containers", "devops"]
+
+  # Kubernetes MCP Server (stdio type)
+  k8s_mcp:
+    type: stdio
+    command: kubectl
+    args:
+      - "mcp"
+      - "--namespace"
+      - "default"
+    env:
+      KUBECONFIG: ${HOME}/.kube/config
+    timeout: 30
+    metadata:
+      description: "Kubernetes cluster management"
+      tags: ["kubernetes", "k8s", "orchestration"]

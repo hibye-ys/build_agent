@@ -1,0 +1,21 @@
+# Default MCP Configuration
+# Minimal configuration for getting started
+
+settings:
+  connection_timeout: 30
+  retry_attempts: 3
+  lazy_loading: true
+  cache_enabled: true
+  cache_ttl: 3600
+  health_check_interval: 60
+
+servers:
+  # Example: Filesystem MCP Server
+  # Uncomment and configure to use
+  # filesystem_mcp:
+  #   type: stdio
+  #   command: npx
+  #   args:
+  #     - "@modelcontextprotocol/server-filesystem"
+  #     - "/tmp"
+  #   timeout: 30
