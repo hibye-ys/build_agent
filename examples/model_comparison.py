@@ -10,6 +10,7 @@ from typing import List, Dict, Any
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models import ModelProvider, ModelConfig, create_chat_model, get_available_models
+from src.config import get_model_config_for_example, get_available_models_for_provider
 
 
 def compare_models(
@@ -100,25 +101,29 @@ def main():
         }
     ]
     
-    # Models to test (configure based on available API keys)
+    # Load models from config
+    config_models = get_model_config_for_example("model_comparison")
     models_to_test = []
     
     if os.getenv("OPENAI_API_KEY"):
+        openai_models = config_models.get("openai_models", get_available_models_for_provider("openai")[:2])
         models_to_test.extend([
-            {"provider": ModelProvider.OPENAI, "model": "gpt-4"},
-            {"provider": ModelProvider.OPENAI, "model": "gpt-3.5-turbo"}
+            {"provider": ModelProvider.OPENAI, "model": model}
+            for model in openai_models
         ])
     
     if os.getenv("ANTHROPIC_API_KEY"):
+        anthropic_models = config_models.get("anthropic_models", get_available_models_for_provider("anthropic")[:2])
         models_to_test.extend([
-            {"provider": ModelProvider.ANTHROPIC, "model": "claude-3-haiku"},
-            {"provider": ModelProvider.ANTHROPIC, "model": "claude-3-sonnet"}
+            {"provider": ModelProvider.ANTHROPIC, "model": model}
+            for model in anthropic_models
         ])
     
     if os.getenv("GOOGLE_API_KEY"):
+        google_models = config_models.get("google_models", get_available_models_for_provider("google")[:2])
         models_to_test.extend([
-            {"provider": ModelProvider.GOOGLE, "model": "gemini-1.5-flash"},
-            {"provider": ModelProvider.GOOGLE, "model": "gemini-pro"}
+            {"provider": ModelProvider.GOOGLE, "model": model}
+            for model in google_models
         ])
     
     if not models_to_test:

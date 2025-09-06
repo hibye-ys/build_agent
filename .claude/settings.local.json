@@ -16,7 +16,13 @@
       "mcp__serena__execute_shell_command",
       "mcp__serena__find_file",
       "mcp__serena__replace_symbol_body",
-      "mcp__serena__replace_regex"
+      "mcp__serena__replace_regex",
+      "Bash(git diff:*)",
+      "Bash(python -m pytest tests/ -v --tb=short)",
+      "mcp__serena__think_about_collected_information",
+      "Bash(python:*)",
+      "Bash(timeout 10 python:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

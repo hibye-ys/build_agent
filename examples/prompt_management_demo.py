@@ -11,16 +11,16 @@ sys.path.append(str(Path(__file__).parent.parent))
 from src.prompts import (
     PromptTemplateManager,
     PromptTemplate,
-    PromptLoaderManager,
     PromptValidator,
     TokenCounter,
     PromptOptimizer,
-    PromptEnvironment,
     AgentPromptTemplate,
     SystemPromptTemplate,
-    CompositePromptTemplate
+    YAMLPromptLoader,
+    JSONPromptLoader
 )
 from src.agents.enhanced_react_agent import create_enhanced_react_agent
+from src.config import get_model_config_for_example, get_validated_model_config
 
 
 def demo_basic_prompt_management():
@@ -31,7 +31,7 @@ def demo_basic_prompt_management():
     
     # Create prompt manager
     manager = PromptTemplateManager(
-        environment=PromptEnvironment.DEVELOPMENT,
+        # environment="development",  # Not used in current implementation
         default_language="en"
     )
     
@@ -124,7 +124,9 @@ def demo_composite_prompts():
     print("="*60)
     
     # Create a composite prompt
-    composite = CompositePromptTemplate(
+    # CompositePromptTemplate not available in current implementation
+    # Using SystemPromptTemplate instead
+    composite = SystemPromptTemplate(
         name="full_agent",
         description="Complete agent prompt with system and task components"
     )
@@ -203,11 +205,11 @@ def demo_prompt_loading():
     # Create manager
     manager = PromptTemplateManager(
         templates_dir=Path("prompts/templates"),
-        environment=PromptEnvironment.DEVELOPMENT
+        # environment="development"  # Not used in current implementation
     )
     
     # Create loader
-    loader = PromptLoaderManager(manager)
+    loader = YAMLPromptLoader()
     
     # Try to load from base file
     base_file = Path("prompts/templates/base.yaml")
@@ -377,9 +379,12 @@ def demo_enhanced_agent():
     
     try:
         # Create an enhanced agent
+        config_models = get_model_config_for_example("prompt_management")
+        prompt_model, _ = get_validated_model_config("openai", config_models.get('default_model'))
+        
         agent = create_enhanced_react_agent(
             model_provider="openai",
-            model_name="gpt-4",
+            model_name=prompt_model,
             tool_names=["calculator", "datetime"],
             prompt_id="react_agent",
             language="en",

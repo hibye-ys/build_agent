@@ -3,9 +3,13 @@ Advanced examples of MCP integration with LangChain/LangGraph.
 """
 
 import asyncio
+import sys
 import time
 from pathlib import Path
 from typing import Dict, Any, List
+
+# Add parent directory to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from langchain_core.messages import HumanMessage, AIMessage
 from langgraph.graph import StateGraph, END, START
@@ -14,6 +18,7 @@ from src.mcp import MCPManager, MCPConfig, ServerConfig, ServerType
 from src.models.model_factory import ModelConfig, create_chat_model
 from src.agents.custom_agent import AgentState
 from src.tools.tool_registry import set_mcp_manager, load_mcp_tools
+from src.config import get_model_config_for_example, get_validated_model_config
 
 
 async def parallel_mcp_operations():
@@ -188,9 +193,13 @@ async def mcp_with_langgraph_workflow():
         return
     
     # Create model
+    # Get validated model from config
+    config_models = get_model_config_for_example("mcp_examples")
+    mcp_model, _ = get_validated_model_config("anthropic", config_models.get('default_model'))
+    
     model_config = ModelConfig(
-        provider="openai",
-        model_name="gpt-4",
+        provider="anthropic",
+        model_name=mcp_model,
         temperature=0.7
     )
     model = create_chat_model(model_config)

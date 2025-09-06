@@ -7,7 +7,7 @@ with LangChain and LangGraph agents, enabling seamless tool discovery and usage.
 
 from .client import MCPClient, MCPConnection
 from .adapter import MCPLangChainAdapter, MCPToolConverter
-from .config import MCPConfig, ServerConfig
+from .config import MCPConfig, ServerConfig, ServerType
 from .registry import MCPRegistry, MCPServerInfo
 from .manager import MCPManager
 from .resources import MCPResourceManager
@@ -30,6 +30,7 @@ __all__ = [
     'MCPToolConverter',
     'MCPConfig',
     'ServerConfig',
+    'ServerType',
     'MCPRegistry',
     'MCPServerInfo',
     'MCPResourceManager',

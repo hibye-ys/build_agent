@@ -1,0 +1,67 @@
+# Model Configuration for Examples
+# This file defines available models and default configurations
+
+# Default models for each provider (recommended)
+default_models:
+  openai: "gpt-4.1-mini"      # Fast and cost-effective
+  anthropic: "claude-sonnet-4" # Latest Claude model  
+  google: "gemini-2.5-flash"   # Latest Gemini model
+
+# Available models by provider (from MODEL_REGISTRY)
+available_models:
+  openai:
+    - "gpt-5"
+    - "gpt-5-mini"
+    - "gpt-5-nano"
+    - "gpt-4.1"
+    - "gpt-4.1-mini"
+    - "gpt-4.1-nano"
+    - "o3"
+    - "o4-mini"
+  
+  anthropic:
+    - "claude-opus-4.1"
+    - "claude-sonnet-4"
+    - "claude-3.7-sonnet"
+  
+  google:
+    - "gemini-2.5-pro"
+    - "gemini-2.5-flash"
+    - "gemini-2.5-flash-lite"
+
+# Example-specific model configurations
+examples:
+  basic_agent:
+    openai_model: "gpt-4.1-mini"
+    anthropic_model: "claude-sonnet-4"
+    google_model: "gemini-2.5-flash"
+    
+  multi_agent:
+    supervisor_model: "claude-sonnet-4"      # Good for coordination
+    research_model: "gpt-4.1-mini"          # Fast research
+    writer_model: "gpt-4.1-mini"            # Good writing
+    analyst_model: "claude-sonnet-4"        # Strong analysis
+    
+  model_comparison:
+    openai_models:
+      - "gpt-4.1"
+      - "gpt-4.1-mini"
+    anthropic_models:
+      - "claude-sonnet-4"
+      - "claude-3.7-sonnet"
+    google_models:
+      - "gemini-2.5-flash"
+      - "gemini-2.5-pro"
+      
+  mcp_examples:
+    default_model: "claude-sonnet-4"        # Good for tool usage
+    
+  prompt_management:
+    default_model: "gpt-4.1-mini"           # Good for testing prompts
+
+# Model temperature settings by use case
+temperature_settings:
+  creative: 0.8
+  analytical: 0.3
+  balanced: 0.5
+  deterministic: 0.0

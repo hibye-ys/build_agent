@@ -13,8 +13,6 @@ from ..models import ModelConfig, create_chat_model
 from ..tools import get_tools_by_names
 from ..prompts import (
     PromptTemplateManager,
-    PromptLoaderManager,
-    PromptEnvironment,
     PromptValidator,
     TokenCounter
 )
@@ -51,7 +49,7 @@ class PromptManagedReactAgent:
         self,
         config: EnhancedReactAgentConfig,
         prompt_manager: Optional[PromptTemplateManager] = None,
-        environment: PromptEnvironment = PromptEnvironment.DEVELOPMENT
+        environment: str = "development"
     ):
         """Initialize the prompt-managed ReAct agent.
         
@@ -92,18 +90,19 @@ class PromptManagedReactAgent:
         )
         
         # Load templates from files
-        loader_manager = PromptLoaderManager(manager)
+        # PromptLoaderManager not available in current implementation
+        # loader_manager = PromptLoaderManager(manager)
         
         # Try to load from template files
-        base_file = templates_dir / "base.yaml"
-        if base_file.exists():
-            loader_manager.load_from_file(base_file)
+        # base_file = templates_dir / "base.yaml"
+        # if base_file.exists():
+        #     loader_manager.load_from_file(base_file)
         
         # Load language-specific templates
-        if self.config.language != "en":
-            lang_file = templates_dir / "i18n" / f"{self.config.language}.yaml"
-            if lang_file.exists():
-                loader_manager.load_from_file(lang_file)
+        # if self.config.language != "en":
+        #     lang_file = templates_dir / "i18n" / f"{self.config.language}.yaml"
+        #     if lang_file.exists():
+        #         loader_manager.load_from_file(lang_file)
         
         return manager
     
@@ -383,14 +382,9 @@ def create_enhanced_react_agent(
         raise ValueError(f"Unknown provider: {model_provider}")
     
     # Map environment string to enum
-    env_map = {
-        "development": PromptEnvironment.DEVELOPMENT,
-        "staging": PromptEnvironment.STAGING,
-        "production": PromptEnvironment.PRODUCTION,
-        "test": PromptEnvironment.TEST
-    }
-    
-    env_enum = env_map.get(environment.lower(), PromptEnvironment.DEVELOPMENT)
+    # PromptEnvironment enum not available in current implementation
+    # Using string representation directly
+    env_string = environment.lower() if environment else "development"
     
     config = EnhancedReactAgentConfig(
         model_config=ModelConfig(
@@ -403,4 +397,4 @@ def create_enhanced_react_agent(
         memory=memory
     )
     
-    return PromptManagedReactAgent(config, environment=env_enum)
+    return PromptManagedReactAgent(config, environment=env_string)

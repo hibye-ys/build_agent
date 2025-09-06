@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.models import ModelProvider, ModelConfig, create_chat_model
 from src.agents import create_react_agent_wrapper, ReactAgentConfig
 from src.tools import get_tools_by_names
+from src.config import get_model_config_for_example, get_validated_model_config
 
 
 def main():
@@ -18,14 +19,26 @@ def main():
     print("🤖 Multi-Model Agent Testing Framework")
     print("=" * 50)
     
+    # Load model configurations for this example
+    model_configs = get_model_config_for_example("basic_agent")
+    print("\n📋 Using models from config:")
+    print(f"  OpenAI: {model_configs.get('openai_model', 'default')}")
+    print(f"  Anthropic: {model_configs.get('anthropic_model', 'default')}")
+    print(f"  Google: {model_configs.get('google_model', 'default')}")
+    
     # Example 1: OpenAI Agent
-    print("\n📌 Example 1: OpenAI GPT-4 Agent")
+    print("\n📌 Example 1: OpenAI Agent")
     print("-" * 30)
+    
+    # Get validated model for OpenAI
+    openai_model, is_original = get_validated_model_config("openai", model_configs.get('openai_model'))
+    if not is_original:
+        print(f"  ⚠️ Using alternative model: {openai_model}")
     
     openai_config = ReactAgentConfig(
         model_config=ModelConfig(
             provider=ModelProvider.OPENAI,
-            model_name="gpt-4",
+            model_name=openai_model,
             temperature=0.7
         ),
         tools=["calculator", "weather", "datetime"],
@@ -41,21 +54,26 @@ def main():
             "messages": [
                 {"role": "user", "content": "What's 25 * 4? Also, what's the weather in Seoul?"}
             ]
-        })
+        }, config={"configurable": {"thread_id": "example1"}})
         
         print("Response:", response["messages"][-1].content)
         
     except Exception as e:
         print(f"Error with OpenAI agent: {e}")
     
-    # Example 2: Anthropic Agent
-    print("\n📌 Example 2: Anthropic Claude Agent")
+    # Example 2: Anthropic Agent  
+    print(f"\n📌 Example 2: Anthropic Agent")
     print("-" * 30)
+    
+    # Get validated model for Anthropic
+    anthropic_model, is_original = get_validated_model_config("anthropic", model_configs.get('anthropic_model'))
+    if not is_original:
+        print(f"  ⚠️ Using alternative model: {anthropic_model}")
     
     anthropic_config = ReactAgentConfig(
         model_config=ModelConfig(
             provider=ModelProvider.ANTHROPIC,
-            model_name="claude-3-haiku",
+            model_name=anthropic_model,
             temperature=0.5
         ),
         tools=["calculator", "web_search"],
@@ -71,21 +89,26 @@ def main():
             "messages": [
                 {"role": "user", "content": "Calculate the square root of 144 and search for 'LangChain tutorial'"}
             ]
-        })
+        }, config={"configurable": {"thread_id": "example2"}})
         
         print("Response:", response["messages"][-1].content)
         
     except Exception as e:
         print(f"Error with Anthropic agent: {e}")
     
-    # Example 3: Google Gemini Agent
-    print("\n📌 Example 3: Google Gemini Agent")
+    # Example 3: Google Agent
+    print(f"\n📌 Example 3: Google Agent")
     print("-" * 30)
+    
+    # Get validated model for Google
+    google_model, is_original = get_validated_model_config("google", model_configs.get('google_model'))
+    if not is_original:
+        print(f"  ⚠️ Using alternative model: {google_model}")
     
     google_config = ReactAgentConfig(
         model_config=ModelConfig(
             provider=ModelProvider.GOOGLE,
-            model_name="gemini-1.5-flash",
+            model_name=google_model,
             temperature=0.6
         ),
         tools=["datetime", "calculator"],
@@ -115,9 +138,9 @@ def main():
     test_query = "Explain quantum computing in one sentence."
     
     models_to_test = [
-        ("OpenAI GPT-4", ModelProvider.OPENAI, "gpt-4"),
-        ("Anthropic Claude", ModelProvider.ANTHROPIC, "claude-3-haiku"),
-        ("Google Gemini", ModelProvider.GOOGLE, "gemini-1.5-flash")
+        ("OpenAI", ModelProvider.OPENAI, openai_model),
+        ("Anthropic", ModelProvider.ANTHROPIC, anthropic_model),  
+        ("Google", ModelProvider.GOOGLE, google_model)
     ]
     
     for name, provider, model_name in models_to_test:

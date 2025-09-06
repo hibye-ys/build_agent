@@ -6,9 +6,9 @@ from typing_extensions import TypedDict
 
 from langchain_core.messages import BaseMessage
 from langgraph.graph import StateGraph, END, START
-from langgraph.graph.graph import CompiledStateGraph
+from langgraph.graph.state import CompiledStateGraph
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.checkpoint.sqlite import SqliteSaver
+# from langgraph.checkpoint.sqlite import SqliteSaver  # Optional, may not be available
 
 
 class WorkflowState(TypedDict):

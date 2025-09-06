@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models import ModelProvider, ModelConfig
 from src.agents.multi_agent import AgentConfig, create_supervisor_agent
+from src.config import get_model_config_for_example, get_validated_model_config
 
 
 def main():
@@ -17,12 +18,20 @@ def main():
     print("🤝 Multi-Agent Collaboration Example")
     print("=" * 50)
     
+    # Load model configurations for this example
+    model_configs = get_model_config_for_example("multi_agent")
+    print("\n📋 Using models from config:")
+    for key, value in model_configs.items():
+        print(f"  {key}: {value}")
+    
     # Define specialized agents
+    research_model, _ = get_validated_model_config("openai", model_configs.get('research_model'))
+    
     research_agent_config = AgentConfig(
         name="research_agent",
         model_config=ModelConfig(
             provider=ModelProvider.OPENAI,
-            model_name="gpt-4",
+            model_name=research_model,
             temperature=0.7
         ),
         tools=["web_search", "calculator"],
@@ -30,11 +39,13 @@ def main():
         description="Handles research tasks, data gathering, and information analysis"
     )
     
+    writer_model, _ = get_validated_model_config("openai", model_configs.get('writer_model'))
+    
     writer_agent_config = AgentConfig(
         name="writer_agent",
         model_config=ModelConfig(
             provider=ModelProvider.OPENAI,
-            model_name="gpt-3.5-turbo",
+            model_name=writer_model,
             temperature=0.8
         ),
         tools=["datetime"],
@@ -42,11 +53,13 @@ def main():
         description="Handles content creation, writing, and documentation tasks"
     )
     
+    analyst_model, _ = get_validated_model_config("anthropic", model_configs.get('analyst_model'))
+    
     analyst_agent_config = AgentConfig(
         name="analyst_agent",
         model_config=ModelConfig(
-            provider=ModelProvider.OPENAI,
-            model_name="gpt-4",
+            provider=ModelProvider.ANTHROPIC,
+            model_name=analyst_model,
             temperature=0.5
         ),
         tools=["calculator"],
@@ -55,9 +68,11 @@ def main():
     )
     
     # Create supervisor configuration
+    supervisor_model, _ = get_validated_model_config("anthropic", model_configs.get('supervisor_model'))
+    
     supervisor_config = ModelConfig(
-        provider=ModelProvider.OPENAI,
-        model_name="gpt-4",
+        provider=ModelProvider.ANTHROPIC,
+        model_name=supervisor_model,
         temperature=0.3
     )
     
